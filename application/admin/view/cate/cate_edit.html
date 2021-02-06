@@ -1,0 +1,68 @@
+{extend name="public/base"}
+
+
+        {block name="content"}
+        <div class="templatemo-content-container">
+          <div class="templatemo-content-widget white-bg">
+            <h2 class="margin-bottom-10">修改栏目</h2>
+            <p>在这里，您可以修改栏目标签</p>
+            <form action="index.html" class="templatemo-login-form" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="id" value="{$list.id}">
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label for="inputFirstName">栏目名称</label>
+                    <input type="text" class="form-control" value="{$list.catename}" id="catename" name="catename" placeholder="栏目名称">                  
+                </div>
+              </div>
+              <div class="form-group text-left">
+                <button type="submit" class="templatemo-blue-button" id="edit">修改</button>
+              </div>                           
+            </form>
+          </div>
+
+        </div>
+
+
+        {/block}
+
+
+
+        {block name="jsjs"}
+          <script>
+              
+              $(function () {
+                //修改栏目
+                $("#edit").click(function () {
+                  $.ajax({
+                    url:"{:url('admin/cate/CateEdit')}",
+                    type:"post",
+                    data:$('form').serialize(),
+                    dataType:'json',
+                    success:function (data) {
+                      if(data.code ==1) {
+                        layer.msg(data.msg,{
+                          icon:6,
+                          time:500
+                        },function () {
+                          location.href = data.url;
+                        });
+                      } else {
+                        layer.open({
+                          title:"栏目修改失败",
+                          content:data.msg,
+                          icon:5,
+                          anim:4
+                        })
+                      }
+                    }
+                  });
+
+                  return false;
+                })
+
+                //结束修改栏目
+              })
+
+          </script>
+        {/block}
+

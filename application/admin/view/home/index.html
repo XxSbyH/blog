@@ -1,0 +1,100 @@
+{extend name="public/base"}
+      {block name="sidebar"}
+        {__block__}
+      {/block}
+      
+      {block name="top"}
+        {__block__}
+      {/block}
+ 
+        {block name="content"}
+            <div class="templatemo-content-container">
+              <div class="col-1">
+                <div class="panel panel-default templatemo-content-widget white-bg no-padding templatemo-overflow-hidden">
+                  <i class="fa fa-times"></i>
+                  <div class="panel-heading templatemo-position-relative"><h2 class="text-uppercase">服务器信息</h2></div>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <td>服务器域名</td>
+                          <td>IP地址</td>
+                          <td>端口号 </td>
+                          <td>Email</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+  
+                      <tr>
+                        <td>{$Request.domain}</td>
+                        <td>{$Request.ip}</td>
+                        <td>{$Request.port}</td>
+                        <td></td>
+                      </tr>  
+  
+  
+                        {//foreach $list as $key=>$v}
+                        <tr>
+                           <td>{//$key}</td>
+                           <td>{//$v.first_name}</td>
+                           <td>{//$v.last_name}</td>
+                           <td>{//$v.username}</td>
+                           <td>{//$v.email}</td>
+                        </tr>        
+                        {//foreach}
+  
+  
+                      </tbody>
+                    </table>    
+                  </div>                          
+                </div>
+              </div>
+            </div>
+        {/block}
+
+
+        {block}
+          <script>
+            function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Topping');
+            data.addColumn('number', 'Slices');
+            data.addRows([
+              ['Mushrooms', 3],
+              ['Onions', 1],
+              ['Olives', 1],
+              ['Zucchini', 1],
+              ['Pepperoni', 2]
+            ]);
+
+            // Set chart options
+            var options = {'title':'How Much Pizza I Ate Last Night'};
+
+            // Instantiate and draw our chart, passing in some options.
+            var pieChart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
+            pieChart.draw(data, options);
+
+            var barChart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
+            barChart.draw(data, options);
+            }
+
+
+            $(document).ready(function(){
+            if($.browser.mozilla) {
+              $(window).bind('resize', function(e)
+              {
+                if (window.RT) clearTimeout(window.RT);
+                window.RT = setTimeout(function()
+                {
+                  this.location.reload(false); /* false to get page from cache */
+                }, 200);
+              });      
+            } else {
+              $(window).resize(function(){
+                drawChart();
+              });  
+            }   
+          });
+          </script>
+        {/block}

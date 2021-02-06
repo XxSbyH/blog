@@ -1,0 +1,93 @@
+{extend name="public/base"}
+
+{block name="content"}
+<div class="templatemo-content-container">
+    <div class="templatemo-content-widget white-bg">
+      <h2 class="margin-bottom-10">修改文章</h2>
+      <p>在这里，您可以修改文章内容</p>
+      <form action="index.html" class="templatemo-login-form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{$list.id}">
+        <div class="row form-group">
+          <div class="col-lg-6 col-md-6 form-group">                  
+              <label for="inputFirstName">文章标题</label>
+              <input type="text" class="form-control" value="{$list.title}" id="title" name="title" placeholder="文章标题">                  
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-lg-6 col-md-6 form-group">                  
+              <label for="inputUsername">标签</label>
+              <input type="text" class="form-control" id="tags" name="tags" value="{$list.tags}" placeholder="标签多个使用 | 分隔">                  
+          </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-6 col-md-6 form-group"> 
+              <label class="control-label templatemo-block">所属导航</label>
+                            
+              <select class="form-control" name="daohang">
+
+                <option value="">请选择</option>       
+                {foreach $cate as $key => $v}
+                  <option value="{$v.id}"  {if $v.id == $list.cate_id} selected = "selected" {if}>{$v.catename}</option>
+                {/foreach}
+              </select>
+              
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-8 form-group">                   
+                <label class="control-label" for="inputNote">文章概要</label>
+                <textarea class="form-control" id="desc"  name="desc" rows="2">{$list.desc}</textarea>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-8 form-group">                   
+                <label class="control-label" for="inputNote">文章内容</label>
+                <textarea class="form-control" id="content"  name="content" rows="5">{$list.content}</textarea>
+            </div>
+        </div>
+        <div class="form-group text-left">
+          <button type="submit" class="templatemo-blue-button" id="modify">修改</button>
+        </div>                            
+      </form>
+    </div>
+
+</div>
+{/block}
+
+{block name="jsjs"}
+  <script>
+    $(function () {
+
+      //修改文章
+      $("#modify").click(function () {
+
+        $.ajax({
+          url:"{:url('admin/article/ArticleEdit')}",
+          type:'post',
+          data:$('form').serialize(),
+          dataType:'json',
+          success:function(data) {
+            if(data.code == 1) {
+                  layer.msg(data.msg,{
+                    icon:6,
+                    time:1000
+                  },function () {
+                    location.href = data.url;
+                  });
+                } else {
+                    layer.open({
+                      title:"文章修改失败",
+                      content:data.msg,
+                      icon:5,
+                      anim:4
+                    })
+                }
+          }
+        });
+        return false;
+      });
+
+      //结束修改文章
+    })
+  </script>
+{/block}

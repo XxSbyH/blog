@@ -1,0 +1,135 @@
+{extend name="public/base"}
+
+
+        {block name="content"}
+        <div class="templatemo-content-container">
+          <div class="templatemo-content-widget white-bg">
+            <h2 class="margin-bottom-10">新增栏目</h2>
+            <p>在这里，您可以新增所需的栏目内容</p>
+            <form action="index.html" class="templatemo-login-form" method="post" enctype="multipart/form-data">
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label for="inputFirstName">栏目名称</label>
+                    <input type="text" class="form-control" id="catename" name="catename" placeholder="栏目名称">                  
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label for="inputUsername">排序</label>
+                    <input type="text" class="form-control" id="sort" name="sort" placeholder="排序">                  
+                </div>
+              </div>
+              <div class="form-group text-left">
+                <button type="submit" class="templatemo-blue-button" id="add">提交</button>
+              </div>                           
+            </form>
+          </div>
+
+
+          <div class="panel-heading"><h2 class="text-uppercase">栏目显示</h2></div>
+          <table class="table table-striped table-bordered templatemo-user-table">
+            <thead>
+              <tr>
+                <td><a href="" class="white-text templatemo-sort-by">栏目名称<span class="caret"></span></a></td>
+                <td><a href="" class="white-text templatemo-sort-by">排序<span class="caret"></span></a></td>
+                <td>Edit</td>
+                <td>Delete</td>
+              </tr>
+            </thead>
+            <tbody>
+             {foreach $list as $key => $v}
+                  <tr>
+                     <td>{$v.catename}</td>
+                     <td>{$v.sort}</td>
+                     <td><a href="{:url('admin/cate/CateEdit',['id'=>$v.id])}" class="templatemo-edit-btn">Edit</a></td>
+                     <td><a href="" class="templatemo-link" name="del" dataid="{$v.id}">Delete</a></td>
+                  </tr>
+                  {$list|raw}
+          {/foreach}        
+            </tbody>
+          </table> 
+            
+        </div>
+
+
+        {/block}
+
+
+
+        {block name="jsjs"}
+          <script>
+              
+              $(function () {
+                //新增栏目 ajax
+                $("#add").click(function () {
+                  $.ajax({
+                    url:"{:url('admin/cate/add')}",
+                    type:'post',
+                    data:$('form').serialize(),
+                    dataType:'json',
+                    success:function (data) {
+                      if(data.code == 1) {
+                        layer.msg(data.msg,{
+                          icon:6,
+                          time:500
+                        },function () {
+                          location.href = data.url;
+                        });
+                      } else {
+                        layer.open({
+                          title:"栏目添加失败",
+                          content:data.msg,
+                          icon:6,
+                          anim:4
+                        })
+                      }
+                    }
+                  });
+
+                  return false;
+                })
+                //结束栏目 ajax
+
+
+                //删除栏目
+                $("[name='del']").click(function () {
+                  var id = $(this).attr("dataid");
+                  layer.confirm('您确认要删除吗？',{
+                    title:'栏目删除',
+                    icon:3
+                  },function (index) {
+                    layer.close(index);
+                    $.ajax({
+                      url:"{:url('admin/cate/CateDelete')}",
+                      type:'post',
+                      data:{'id':id},
+                      dataType:'json',
+                      success:function (data) {
+                        console.log(data);
+                            if(data.code == 1) {
+                              layer.msg(data.msg,{
+                                icon:6,
+                                time:500
+                              },function () {
+                                location.href = data.url;
+                              });
+                            } else {
+                                layer.open({
+                                  title:"栏目删除失败",
+                                  content:data.msg,
+                                  icon:5,
+                                  anim:4
+                                })
+                            }
+                      }
+                    });
+
+                  });
+                  return false;
+                })
+                //结束删除
+              })
+
+          </script>
+        {/block}
+

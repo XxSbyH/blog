@@ -1,0 +1,79 @@
+        {extend name="public/base"}
+
+        {block name="content"}
+            <div class="templatemo-content-container">
+                <div class="templatemo-content-widget white-bg">
+                <h2 class="margin-bottom-10">文章列表</h2>
+                <table class="table table-striped table-bordered templatemo-user-table">
+                    <thead>
+                    <tr>
+                        <!-- 文章设置审核状态——审核通过后才可前台展示 -->
+                        <td><a href="" class="white-text templatemo-sort-by">文章标题<span class="caret"></span></a></td>
+                        <td><a href="" class="white-text templatemo-sort-by">文章标签<span class="caret"></span></a></td>
+                        <td>所属栏目</td>
+                        <td>创建时间</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {foreach $data as $key => $v}
+                        <tr>
+                            <td>{$v.title}</td>
+                            <td>{$v.tags}</td>
+                            <td>{$v.cate.catename}</td>
+                            <td>{$v.create_time}</td>
+                            <td>
+                                <a href="{:url('admin/article/ArticleEdit',['id' => $v.id])}" id="edit" class="templatemo-edit-btn">Edit</a>
+                                <a href="" class="templatemo-edit-btn" name="del" dataid="{$v.id}">Delete</a>
+                            </td>
+                        </tr>
+                        {/foreach}    
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        {/block}
+
+        {block name="jsjs"}
+            <script>
+                $(function () {
+                    //删除文章
+                        $("[name='del']").click(function () {
+                            var id = $(this).attr("dataid");
+                            layer.confirm('您确认要删除吗？',{
+                                title:'文章删除',
+                                icon:3
+                            },function (index) {
+                                layer.close(index);
+                                $.ajax({
+                                url:"{:url('admin/article/ArticleDel')}",
+                                type:'post',
+                                data:{'id':id},
+                                dataType:'json',
+                                success:function (data) {
+                                    console.log(data);
+                                        if(data.code == 1) {
+                                        layer.msg(data.msg,{
+                                            icon:6,
+                                            time:500
+                                        },function () {
+                                            location.href = data.url;
+                                        });
+                                        } else {
+                                            layer.open({
+                                            title:"文章删除失败",
+                                            content:data.msg,
+                                            icon:5,
+                                            anim:4
+                                            })
+                                        }
+                                     }
+                                });
+
+                            });
+                            return false;
+                        });
+                    //结束删除文章
+                })
+            </script>
+        {/block}

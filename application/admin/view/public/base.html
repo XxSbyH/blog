@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">  
+    <title>Home</title>
+    <meta name="description" content="">
+
+
+    {load href="/__CSS__/font-awesome.min.css,/__CSS__/bootstrap.min.css,/__CSS__/templatemo-style.css"}
+
+  </head>
+  <body>  
+    <!-- Left column -->
+
+    <div class="templatemo-flex-row">
+      {block name="sidebar"}
+      <div class="templatemo-sidebar">
+        <header class="templatemo-site-header">
+          <div class="square"></div>
+          <h1>欢迎您 {:session('admin.nickname')}</h1>
+        </header>
+        <div class="profile-photo-container">
+          <img src="/__IMG__/profile-photo.jpg" alt="Profile Photo" class="img-responsive">  
+          <div class="profile-photo-overlay"></div>
+        </div>      
+        <!-- Search box -->
+        <form class="templatemo-search-form" role="search">
+          <div class="input-group">
+              <button type="submit" class="fa fa-search"></button>
+              <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">           
+          </div>
+        </form>
+        <div class="mobile-menu-icon">
+            <i class="fa fa-bars"></i>
+        </div>
+
+        <nav class="templatemo-left-nav">
+          <ul>
+            <li><a href="{:url('admin/home/index')}" class="active"><i class="fa fa-home fa-fw"></i>后台首页</a></li>
+            <li><a href="{:url('admin/cate/showlist')}"><i class="fa fa-bar-chart fa-fw"></i>栏目管理</a></li>
+            <li><a href="{:url('admin/article/ArticleAdd')}"><i class="fa fa-database fa-fw"></i>文章管理</a></li>
+            <li><a href="{:url('admin/member/MemList')}"><i class="fa fa-map-marker fa-fw"></i>会员管理</a></li>
+            <li><a href="{:url('admin/Admin/AdminList')}"><i class="fa fa-users fa-fw"></i>管理员管理</a></li>
+            <li><a href="{:url('admin/commo/ComList')}"><i class="fa fa-users fa-fw"></i>评论管理</a></li>
+            <li><a href=""><i class="fa fa-sliders fa-fw"></i>系统设置</a></li>
+            
+          </ul>  
+        </nav>
+      </div>
+      {/block}
+      <!-- Main content --> 
+      <div class="templatemo-content col-1 light-gray-bg">
+        {block name="top"}
+        <div class="templatemo-top-nav-container">
+          <div class="row">
+            <nav class="templatemo-top-nav col-lg-12 col-md-12">
+              <ul class="text-uppercase">
+                <li><a href="" class="active">Admin panel</a></li>
+                <li><a href="">Dashboard</a></li>
+                <li><a href="">Overview</a></li>
+                <li><a href="" id="logout">退出登录</a></li>
+                <li><a href="">{//$hello} {//$username} {//$huanying}</a></li>
+              </ul>  
+            </nav> 
+          </div>
+        </div>
+        {/block}
+
+        {block name="content"}
+        
+        {/block}
+
+
+      </div>
+    </div>
+    
+    {load href="/__JS__/jquery-1.11.2.min.js,/__JS__/jquery-migrate-1.2.1.min.js,/__JS__/layer/layer.js,/__JS__/bootstrap.min.js"}
+    <!-- <script src="js/jquery-1.11.2.min.js"></script>      
+    <script src="js/jquery-migrate-1.2.1.min.js"></script> -->
+    {block name="jsjs"}
+
+    {/block}
+    <script>
+         
+      $(function () {
+        //退出登录 ajax
+          $("#logout").click(function () {
+            $.ajax({
+              url:"{:url('admin/home/logout')}",
+              type:'post',
+              dataType:'json',
+              success:function (data) {
+                if(data.code == 1) {
+                  layer.msg(data.msg,{
+                    icon:6,
+                    time:500
+                  },function () {
+                    location.href = data.url;
+                  });
+                } else {
+                  layer.open({
+                    title:"退出登录失败",
+                    content:data.msg,
+                    icon:5,
+                    anim:4
+                  });
+                }
+              }
+            })
+
+            return false;
+          });
+        //结束退出登录 ajax
+
+      });
+      
+    </script>
+    {load href="/__JS__/templatemo-script.js"}
+    <!-- <script type="text/javascript" src="js/templatemo-script.js"></script>  -->
+
+  </body>
+</html>

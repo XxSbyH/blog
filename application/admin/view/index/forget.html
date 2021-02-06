@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+body
+{
+  background-color: #F2C9C8;
+  font-family: sans-serif;
+}
+.mainbody 
+{
+  height: 540px;
+  width: 540px;
+}
+.middle 
+{
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+ 
+.form-box {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  background: #DD6764;
+  border-radius: 40px;
+}
+ 
+.input-normal 
+{
+  width: 220px;
+  height: 38px;
+  margin: 30px auto;
+  padding: 0;
+  text-align: center;
+  border-radius: 20px;
+  outline: none;
+  display: block;
+  transition: 0.3s;
+  border: 1px solid #000000;
+  box-shadow:rgba(0,0,0,0.8) 0 0 8px inset;
+}
+ 
+.btn-submit 
+{
+  width: 120px;
+  height: 36px;
+  margin: auto;
+  font-size: 18px;
+  text-align: center;
+  color: white;
+  border-radius: 20px;
+  display: block;
+  background: #ED5666;
+  border: 2px solid #C42737;
+  transition: 0.3s;
+  margin-bottom: 15px;
+}
+
+.front 
+{
+  transform: rotateY(0deg);
+}
+.back 
+{
+  transform: rotateY(-180deg);
+}
+ 
+.front,.back 
+{
+  position: absolute;
+  backface-visibility: hidden;
+  transition: 0.3s linear;
+}
+ 
+.middle-flip .front 
+{
+  transform: rotateY(180deg);
+}
+.middle-flip .back 
+{
+  transform: rotateY(0deg);
+}
+ 
+p {
+  margin: 15px auto;
+  padding: 0;
+  font-size: 16px;
+  color: white;
+  display: block;
+  text-align: center;
+}
+a {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+.form-box h1
+{
+    color: white;
+    text-align: center;
+}
+.hidden {
+  display: none;
+}
+    </style>
+</head>
+<body>
+        <div class="mainbody middle">
+          <input type="hidden" name="__token__" value="{$Request.token}" />
+          <form class="form-box front">
+            <div>
+              <h1>Forget</h1>
+            </div>
+            <div>
+              
+              <input class="input-normal" name="email" type="text" placeholder="注册邮箱">
+              <input class="input-normal hidden" name="code"  type="text" placeholder="验证码"/>
+              <input class="input-normal hidden" name="pass" type="password" placeholder="输入密码">
+              
+            <input type="submit" class="btn-submit" value="发送验证码"  id="sendCode">
+            <input type="submit" class="btn-submit hidden" value="修改密码" id="modify">
+
+            <a href="{:url('admin/index/reg')}" class="btn-submit">
+              返回登录
+              <!-- <button class="btn-submit" type="submit" id="log">
+                返回登录
+              </button> -->
+            </a>
+
+            </div>
+          </form>
+          
+        </div>
+        {load href="/__JS__/jquery-3.4.1.js,/__JS__/js.js,/__JS__/layer/layer.js"}
+
+        <script>
+          $(function() {
+            //发送验证码 ajax
+            var time = 60;
+            $("#sendCode").click(function () {
+              // if(time === 1) {
+              //   time = 60;
+              //   $("#sendCode").value('发送验证码');
+              //   $("#sendCode").removeAttr('disabled');
+              //   $("#sendCode").css('pointer-events','all');
+              //   return ;
+              // } else {
+              //   time--;
+              //   $("#sendCode").value(time+'秒发送');
+              //   $("#sendCode").attr('disabled',true);
+              //   $("#sendCode").css('pointer-events','none');
+              // } 
+              $.ajax({
+                    url:"{:url('admin/index/forget')}",
+                    type:'post',
+                    data:$('form').serialize(),
+                    dataType:'json',
+                    success:function(data) {
+                      if(data.code == 1) {
+                        layer.msg(data.msg,{
+                          icon:6,
+                          time:1000
+                        });
+                        $("[name='email']").addClass('hidden');
+                        $("[name='code']").removeClass('hidden');
+                        $("#sendCode").addClass('hidden');
+                        $("#modify").removeClass('hidden');
+                        $("[name='pass']").removeClass('hidden');
+
+                      } else {
+                          layer.open({
+                            title:"发送失败",
+                            content:data.msg,
+                            icon:5,
+                            anim:4
+                          });
+                      }
+                    } 
+              });
+
+              return false;
+            })
+
+            //结束发送验证码 ajax
+
+            $("#modify").click(function() {
+              $.ajax({
+                url:"{:url('admin/index/reset')}",
+                type:'post',
+                data:$('form').serialize(),
+                dataType:'json',
+                success:function(data) {
+                  if(data.code == 1) {
+                    layer.msg(data.msg,{
+                      icon:6,
+                      time:500
+                    },function () {
+                      location.href= data.url;
+                    });
+                  } else {
+                    layer.open({
+                          title:"修改失败",
+                          content:data.msg,
+                          icon:5,
+                          anim:4
+                    });
+                  }
+                }
+              })
+
+              return false;
+            });
+
+          })
+        </script>
+</body>
+</html>

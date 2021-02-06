@@ -1,0 +1,79 @@
+{extend name="public/base"}
+
+{block name="content"}
+<div class="templatemo-content-container">
+    <div class="templatemo-content-widget white-bg">
+      <h2 class="margin-bottom-10">修改会员</h2>
+      <p>在这里，您可以修改会员信息</p>
+      <form action="index.html" class="templatemo-login-form" method="post" enctype="multipart/form-data">
+        <input type="hidden" value="{$list.id}" name="id">
+        <div class="row form-group">
+          <div class="col-lg-6 col-md-6 form-group">                  
+              <label for="inputFirstName">会员用户名</label>
+              <input type="text" value="{$list.username}" class="form-control" id="username" name="username" placeholder="会员名称" disabled>                  
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-lg-6 col-md-6 form-group">                  
+              <label for="inputFirstName">密码</label>
+              <input type="password" class="form-control" id="pass" name="pass" placeholder="密码">                  
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-lg-6 col-md-6 form-group">                  
+              <label for="inputUsername">会员名称</label>
+              <input type="text" value="{$list.nickname}" class="form-control" id="nickname" name="nickname" placeholder="会员名称">                  
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-lg-6 col-md-6 form-group">                  
+              <label for="inputUsername">邮箱</label>
+              <input type="text" value="{$list.email}" class="form-control" id="email" name="email" placeholder="邮箱" disabled>                  
+          </div>
+        </div>
+        <div class="form-group text-left">
+          <button type="submit" class="templatemo-blue-button" name="edit" id="edit">修改</button>
+        </div>                           
+      </form>
+    </div>
+</div>
+{/block}
+
+
+{block name="jsjs"}
+    <script>
+        $(function () {
+          //会员修改
+            $("#edit").click(function () {
+                $.ajax({
+                    url:"{:url('admin/member/MemEdit')}",
+                    type:"post",
+                    data:$('form').serialize(),
+                    dataType:'json',
+                    success:function (data) {
+                      if(data.code ==1) {
+                        layer.msg(data.msg,{
+                          icon:6,
+                          time:500
+                        },function () {
+                          location.href = data.url;
+                        });
+                      } else {
+                        layer.open({
+                          title:"会员修改失败",
+                          content:data.msg,
+                          icon:5,
+                          anim:4
+                        })
+                      }
+                    }
+                });
+                return false;
+            });
+            //结束修改
+
+
+            
+        })
+    </script>
+{/block}
